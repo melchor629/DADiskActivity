@@ -1,6 +1,6 @@
 language: objective-c
 xcode_project: "Disk Activity.xcodeproj"
-xcode_scheme: "Disk Activity"
+#xcode_scheme: "Disk Activity"
 xcode_sdk: "macosx10.9"
 
 after_success:
