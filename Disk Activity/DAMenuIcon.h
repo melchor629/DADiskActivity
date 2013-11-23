@@ -20,24 +20,83 @@ typedef struct io io_s;
 
 void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
 
+/**
+ *  Main Class, Application Delegate, where all the action happends, for now
+ */
 @interface DAMenuIcon : NSObject <NSApplicationDelegate> {
     NSStatusItem *statusItem;
     NSTimer *updateTimer;
     NSMenu *menu;
 }
 
+/**
+ *  Main Window
+ */
 @property (assign) IBOutlet NSWindow *window;
+
+/**
+ *  Image for icon off
+ */
 @property NSImage *IconOff;
+
+/**
+ *  Image for icon On and color red
+ */
 @property NSImage *IconRed;
+
+/**
+ *  Image for icon On and color green
+ */
 @property NSImage *IconGreen;
+
+/**
+ *  Image for icon On and green and red
+ */
 @property NSImage *IconBoth;
+
+/**
+ *  Set if show or not icon in the Status bar
+ */
 @property BOOL icon;
+
+/**
+ *  Set if show or not text in the Status bar
+ */
 @property BOOL text;
 
+/**
+ *  Method called from Timer. Updates disk activity and shows it
+ *
+ *  @param sender
+ */
 - (IBAction)updateDiskUsage:(id)sender;
+
+/**
+ *  Quit the app
+ *
+ *  @param sender
+ */
 - (IBAction)quit:(id)sender;
+
+/**
+ *  Show preferences, nothing for now
+ *
+ *  @param sender
+ */
 - (IBAction)preferences:(id)sender;
+
+/**
+ *  Show/Hide icon from status bar
+ *
+ *  @param sender
+ */
 - (IBAction)showHideIcon:(id)sender;
+
+/**
+ *  Show/Hide text from status bar
+ *
+ *  @param sender
+ */
 - (IBAction)showHideText:(id)sender;
 
 @end

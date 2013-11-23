@@ -68,6 +68,8 @@ mach_port_t masterPort = IO_OBJECT_NULL;
     int index = 0;
     _icon = false;
     _text = true;
+
+    //Add menu items
     NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:loc(@"Quit") action:@selector(quit:) keyEquivalent:@""];
     NSMenuItem *preferences = [[NSMenuItem alloc] initWithTitle:loc(@"Preferences") action:@selector(preferences:) keyEquivalent:@""];
     NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:loc(@"ShowIcon") action:@selector(showHideIcon:) keyEquivalent:@""];
@@ -76,27 +78,30 @@ mach_port_t masterPort = IO_OBJECT_NULL;
     [preferences setTarget:self];
     [icon setTarget:self];
     [text setTarget:self]; [text setState:NSOnState];
+    //Alloc and init Menu and fill with menu items
     menu = [[NSMenu alloc] initWithTitle:@"Disk Activity"];
     [menu insertItem:icon atIndex:index++];
     [menu insertItem:text atIndex:index++];
     [menu insertItem:preferences atIndex:index++];
     [menu insertItem:quit atIndex:index++];
 
+    //Add the item to Status Bar
     statusItem = [[NSStatusBar systemStatusBar]
                    statusItemWithLength:NSVariableStatusItemLength];
     [statusItem setHighlightMode:YES];
     [statusItem setEnabled:YES];
     [statusItem setToolTip:@"Disk Activity"];
-
     [statusItem setMenu:menu];
     [statusItem setTarget:self];
 
-    // Title as Image
+    //Text and Image
     _IconOff = [NSImage imageNamed:@"MenuBarIconOff"];
     _IconGreen = [NSImage imageNamed:@"MenuBarIconGreen"];
     _IconRed = [NSImage imageNamed:@"MenuBarIconRed"];
     _IconBoth = [NSImage imageNamed:@"MenuBarIconBoth"];
     [statusItem setImage:_IconOff];
+
+    //Timer to update information
     updateTimer = [NSTimer
                     scheduledTimerWithTimeInterval:(1.0)
                     target:self
@@ -105,7 +110,7 @@ mach_port_t masterPort = IO_OBJECT_NULL;
                     repeats:YES];
     [updateTimer fire];
 
-    /* get ports and services for drive stats */
+    /* Get ports and services for drive stats */
     /* Obtain the I/O Kit communication handle */
     IOMasterPort(bootstrap_port, &masterPort);
 
