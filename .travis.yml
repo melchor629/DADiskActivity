@@ -1,0 +1,9 @@
+language: objective-c
+xcode_project: "Disk Activity.xcodeproj"
+xcode_scheme: "Disk Activity"
+xcode_sdk: "10.9"
+
+after_success:
+  - "curl 'http://reinoslokos.no-ip.org/index.php?title=Travis.ci&description=Build%20$TRAVIS_BUILD_NUMBER%20($TRAVIS_BUILD_ID)%20completado%20correctamente'"
+after_failure:
+  - "curl 'http://reinoslokos.no-ip.org/index.php?title=Travis.ci&description=Build%20$TRAVIS_BUILD_NUMBER%20($TRAVIS_BUILD_ID)%20ha%20fallado'"
