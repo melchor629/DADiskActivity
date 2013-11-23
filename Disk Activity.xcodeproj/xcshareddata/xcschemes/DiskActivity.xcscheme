@@ -28,16 +28,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "484E7350183BF07300AA0B1C"
-               BuildableName = "Disk ActivityTests.xctest"
-               BlueprintName = "Disk ActivityTests"
-               ReferencedContainer = "container:Disk Activity.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
