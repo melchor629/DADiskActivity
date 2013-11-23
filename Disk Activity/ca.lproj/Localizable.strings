@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Disk Activity
+
+  Created by Melchor Garau Madrigal on 23/11/13.
+  Copyright (c) 2013 Melchor Garau Madrigal. All rights reserved.
+*/
+
+"Preferences"   = "Preferencies";
+"ShowIcon"      = "Mostrar icona d'activitat";
+"ShowText"      = "Mostrar velocitat";
+"Quit"          = "Sortir";
