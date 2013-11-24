@@ -59,7 +59,9 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s) {
 io_s io;
 io_iterator_t drivelist  = IO_OBJECT_NULL;
 mach_port_t masterPort = IO_OBJECT_NULL;
-int quitI, preferencesI, iconI, textI, graphI;
+int quitI, preferencesI, iconI, textI;
+
+@synthesize graphImage = anImage;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
@@ -95,13 +97,6 @@ int quitI, preferencesI, iconI, textI, graphI;
     [statusItem setMenu:menu];
     [statusItem setTarget:self];
 
-    //Text and Image
-    /*_IconOff = [NSImage imageNamed:@"MenuBarIconOff"];
-    _IconGreen = [NSImage imageNamed:@"MenuBarIconGreen"];
-    _IconRed = [NSImage imageNamed:@"MenuBarIconRed"];
-    _IconBoth = [NSImage imageNamed:@"MenuBarIconBoth"];
-    [statusItem setImage:_IconOff];*/
-
     //Timer to update information
     updateTimer = [NSTimer
                     scheduledTimerWithTimeInterval:(1.0)
@@ -125,24 +120,15 @@ int quitI, preferencesI, iconI, textI, graphI;
 
 - (IBAction)updateDiskUsage:(id)sender {
     getDISKcounters(drivelist, &io);
-    //NSMutableString *title = [[NSMutableString alloc] init];
+    float imgWidth = 60.0;
+         if(_text && !_icon) imgWidth = 44;
+    else if(!_text && _icon) imgWidth = 16;
     NSString *readS = [NSString alloc], *writeS = [NSString alloc];
-    NSImage *anImage = [[NSImage alloc] initWithSize:NSMakeSize(60.0, 21.0)];
+    anImage = [[NSImage alloc] initWithSize:NSMakeSize(imgWidth, 21.0)];
+    NSColor *green = [NSColor colorWithRed:10.0/255.0 green:160/255.0 blue:15/255.0 alpha:1];
+    NSColor *red =   [NSColor colorWithRed:255/255.0  green:10/230.0  blue:15/255.0 alpha:1];
 
     if(_text) {
-        /*if(io.ispeed < 1000)
-            [title appendFormat:@"%lliB/s", io.ispeed];
-        else if(io.ispeed/1000 < 1000)
-            [title appendFormat:@"%lliKB/s", io.ispeed/1000];
-        else if(io.ispeed/1000/1000 < 1000)
-            [title appendFormat:@"%.1fMB/s", io.ispeed/1000.0/1000.0];
-        [title appendString:@" - "];
-        if(io.ospeed < 1000)
-            [title appendFormat:@"%lliB/s", io.ospeed];
-        else if(io.ospeed/1000 < 1000)
-            [title appendFormat:@"%lliKB/s", io.ospeed/1000];
-        else if(io.ospeed/1000/1000 < 1000)
-            [title appendFormat:@"%.1fMB/s", io.ospeed/1000.0/1000.0];*/
         if(io.ispeed < 1000)
             readS = [readS initWithFormat:@"%lliB/s", io.ispeed];
         else if(io.ispeed/1000 < 1000)
@@ -156,49 +142,44 @@ int quitI, preferencesI, iconI, textI, graphI;
             writeS = [writeS initWithFormat:@"%lliKB/s", io.ospeed/1000];
         else if(io.ospeed/1000/1000 < 1000)
             writeS = [writeS initWithFormat:@"%.1fMB/s", io.ospeed/1000.0/1000.0];
+
         [anImage lockFocus];
         NSFont *f = [NSFont fontWithName:@"Lucida Grande" size:9.0];
+        //Read speed
         NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:f,
-                                    NSFontAttributeName, [NSColor colorWithRed:10.0/255.0 green:180/255.0 blue:15/255.0 alpha:1],
+                                    NSFontAttributeName, green,
                                     NSForegroundColorAttributeName, nil];
-        [readS drawAtPoint:NSMakePoint(16, 10) withAttributes:attributes];
+        [readS drawAtPoint:NSMakePoint(_icon ? 16 : 0, 10) withAttributes:attributes];
+        //Write speed
         attributes = [NSDictionary dictionaryWithObjectsAndKeys:f,
-                      NSFontAttributeName, [NSColor colorWithRed:255/255.0 green:10/230.0 blue:15/255.0 alpha:1],
+                      NSFontAttributeName, red,
                       NSForegroundColorAttributeName, nil];
-        [writeS drawAtPoint:NSMakePoint(16, 0) withAttributes:attributes];
+        [writeS drawAtPoint:NSMakePoint(_icon ? 16 : 0, 0) withAttributes:attributes];
         [anImage unlockFocus];
-        [statusItem setImage:anImage];
     }
 
-    //[statusItem setTitle:title];
     if(_icon) {
-        /*if(io.ispeed > 1000 && io.ospeed < 1000)
-            [statusItem setImage:_IconGreen];
-        else if(io.ispeed < 1000 && io.ospeed > 1000)
-            [statusItem setImage:_IconRed];
-        else if(io.ispeed > 1000 && io.ospeed > 1000)
-            [statusItem setImage:_IconBoth];
-        else if(![[statusItem image] isEqualTo:_IconOff])
-            [statusItem setImage:_IconOff];*/
         float read = io.ispeed / 1000.0 * 18 / 2000.0;
         float write = io.ospeed / 1000.0 * 18 / 2000.0;
         read = read > 18.0 ? 18.0 : read;
         write = write > 18.0 ? 18.0 : write;
 
         [anImage lockFocus];
+        //Background bars
         [[NSColor colorWithRed:100/255.0 green:100/255.0 blue:100/255.0 alpha:0.3] setFill];
         [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 1, 5, 18)] fill];
         [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 1, 5, 18)] fill];
-        [[NSColor colorWithRed:50.0/255.0 green:255/255.0 blue:55/255.0 alpha:1] setFill];
+        //Read bar
+        [green setFill];
         [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 1, 5, read)] fill];
-        [[NSColor colorWithRed:255/255.0 green:50/255.0 blue:55/255.0 alpha:1] setFill];
+        //Write bar
+        [red setFill];
         [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 1, 5, write)] fill];
         [anImage unlockFocus];
-        [statusItem setImage:anImage];
-    }/* else {
-        if([statusItem image] != nil)
-            [statusItem setImage:nil];
-    }*/
+    }
+
+    //Set final image
+    [statusItem setImage:anImage];
 }
 
 - (IBAction)quit:(id)sender {

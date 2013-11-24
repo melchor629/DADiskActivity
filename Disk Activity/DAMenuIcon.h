@@ -35,24 +35,9 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
 @property (assign) IBOutlet NSWindow *window;
 
 /**
- *  Image for icon off
+ *  Image variable for the status bar icon
  */
-@property NSImage *IconOff;
-
-/**
- *  Image for icon On and color red
- */
-@property NSImage *IconRed;
-
-/**
- *  Image for icon On and color green
- */
-@property NSImage *IconGreen;
-
-/**
- *  Image for icon On and green and red
- */
-@property NSImage *IconBoth;
+@property (strong) NSImage *graphImage;
 
 /**
  *  Set if show or not icon in the Status bar
