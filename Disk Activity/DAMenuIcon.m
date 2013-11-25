@@ -146,15 +146,19 @@ int quitI, preferencesI, iconI, textI;
         [anImage lockFocus];
         NSFont *f = [NSFont fontWithName:@"Lucida Grande" size:9.0];
         //Read speed
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        [style setAlignment:_icon ? NSLeftTextAlignment : NSRightTextAlignment];
         NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:f,
                                     NSFontAttributeName, green,
-                                    NSForegroundColorAttributeName, nil];
-        [readS drawAtPoint:NSMakePoint(_icon ? 16 : 0, 10) withAttributes:attributes];
+                                    NSForegroundColorAttributeName, style,
+                                    NSParagraphStyleAttributeName, nil];
+        [readS drawInRect:NSMakeRect(_icon ? 16 : 0, 12, [anImage size].width, 10) withAttributes:attributes];
         //Write speed
         attributes = [NSDictionary dictionaryWithObjectsAndKeys:f,
                       NSFontAttributeName, red,
-                      NSForegroundColorAttributeName, nil];
-        [writeS drawAtPoint:NSMakePoint(_icon ? 16 : 0, 0) withAttributes:attributes];
+                      NSForegroundColorAttributeName, style,
+                      NSParagraphStyleAttributeName, nil];
+        [writeS drawInRect:NSMakeRect(_icon ? 16 : 0, 2, [anImage size].width, 10) withAttributes:attributes];
         [anImage unlockFocus];
     }
 
