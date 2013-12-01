@@ -59,7 +59,7 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s) {
 io_s io;
 io_iterator_t drivelist  = IO_OBJECT_NULL;
 mach_port_t masterPort = IO_OBJECT_NULL;
-int quitI, preferencesI, iconI, textI;
+int quitI, preferencesI, iconI, textI, salI;
 
 @synthesize graphImage = anImage;
 
@@ -77,15 +77,18 @@ int quitI, preferencesI, iconI, textI;
     NSMenuItem *preferences = [[NSMenuItem alloc] initWithTitle:loc(@"Preferences") action:@selector(preferences:) keyEquivalent:@""];
     NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:loc(@"ShowIcon") action:@selector(showHideIcon:) keyEquivalent:@""];
     NSMenuItem *text = [[NSMenuItem alloc] initWithTitle:loc(@"ShowText") action:@selector(showHideText:) keyEquivalent:@""];
+    NSMenuItem *sal = [[NSMenuItem alloc] initWithTitle:loc(@"StartAtLogin") action:@selector(startAtLogin:) keyEquivalent:@""];
     [quit setTarget:self];
     [preferences setTarget:self];
     [icon setTarget:self];
     [text setTarget:self]; [text setState:NSOnState];
+    [sal setTarget:self]; [sal setState:([GBLaunchAtLogin isLoginItem] ? NSOnState : NSOffState)];
     //Alloc and init Menu and fill with menu items
     menu = [[NSMenu alloc] initWithTitle:@"Disk Activity"];
     [menu insertItem:icon atIndex:index]; iconI = index++;
     [menu insertItem:text atIndex:index]; textI = index++;
     [menu insertItem:preferences atIndex:index]; preferencesI = index++;
+    [menu insertItem:sal atIndex:index]; salI = index++;
     [menu insertItem:quit atIndex:index]; quitI = index++;
 
     //Add the item to Status Bar
@@ -184,6 +187,7 @@ int quitI, preferencesI, iconI, textI;
 
     //Set final image
     [statusItem setImage:anImage];
+    [statusItem setAlternateImage:anImage];
 }
 
 - (IBAction)quit:(id)sender {
@@ -219,6 +223,16 @@ int quitI, preferencesI, iconI, textI;
         [[menu itemAtIndex:textI] setState:NSOnState];
     else
         [[menu itemAtIndex:textI] setState:NSOffState];
+}
+
+-(IBAction)startAtLogin:(id)sender {
+    if(![GBLaunchAtLogin isLoginItem] && [[menu itemAtIndex:salI] state] == NSOffState) {
+        [GBLaunchAtLogin addAppAsLoginItem];
+        [[menu itemAtIndex:salI] setState:NSOnState];
+    } else if([GBLaunchAtLogin isLoginItem] && [[menu itemAtIndex:salI] state] == NSOnState) {
+        [GBLaunchAtLogin removeAppFromLoginItems];
+        [[menu itemAtIndex:salI] setState:NSOffState];
+    }
 }
 
 @end

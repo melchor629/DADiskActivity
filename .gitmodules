@@ -1,0 +1,3 @@
+[submodule "Disk Activity/GBLaunchAtLogin"]
+	path = Disk Activity/GBLaunchAtLogin
+	url = https://github.com/lmirosevic/GBLaunchAtLogin.git

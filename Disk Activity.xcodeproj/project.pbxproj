@@ -15,8 +15,19 @@
 		484E7341183BF07300AA0B1C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 484E733F183BF07300AA0B1C /* Credits.rtf */; };
 		484E7347183BF07300AA0B1C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 484E7345183BF07300AA0B1C /* MainMenu.xib */; };
 		484E734C183BF07300AA0B1C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 484E734B183BF07300AA0B1C /* Images.xcassets */; };
+		48C8E22C184BBBA100B8A132 /* GBLaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; };
 		48E95AEF18412E83003EA019 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48E95AED18412E83003EA019 /* Localizable.strings */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		48C8E22A184BB9CA00B8A132 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48C8E226184BB9CA00B8A132 /* GBLaunchAtLogin.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8AAC5F6116E4E2880089446E;
+			remoteInfo = GBLaunchAtLogin;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		48374F9C183BFFBB003AA802 /* DAMenuIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAMenuIcon.h; sourceTree = "<group>"; };
@@ -34,6 +45,7 @@
 		484E7340183BF07300AA0B1C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		484E7346183BF07300AA0B1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		484E734B183BF07300AA0B1C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		48C8E226184BB9CA00B8A132 /* GBLaunchAtLogin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GBLaunchAtLogin.xcodeproj; path = "Disk Activity/GBLaunchAtLogin/GBLaunchAtLogin.xcodeproj"; sourceTree = "<group>"; };
 		48E95AEC18412CF5003EA019 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
 		48E95AEE18412E83003EA019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		48E95AF018412E88003EA019 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -46,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48C8E22C184BBBA100B8A132 /* GBLaunchAtLogin.framework in Frameworks */,
 				48418F73183D1F48006E16FA /* IOKit.framework in Frameworks */,
 				484E7331183BF07300AA0B1C /* Cocoa.framework in Frameworks */,
 			);
@@ -57,6 +70,7 @@
 		484E7324183BF07300AA0B1C = {
 			isa = PBXGroup;
 			children = (
+				48C8E226184BB9CA00B8A132 /* GBLaunchAtLogin.xcodeproj */,
 				484E7336183BF07300AA0B1C /* Disk Activity */,
 				484E732F183BF07300AA0B1C /* Frameworks */,
 				484E732E183BF07300AA0B1C /* Products */,
@@ -116,6 +130,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		48C8E227184BB9CA00B8A132 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -168,12 +190,28 @@
 			mainGroup = 484E7324183BF07300AA0B1C;
 			productRefGroup = 484E732E183BF07300AA0B1C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 48C8E227184BB9CA00B8A132 /* Products */;
+					ProjectRef = 48C8E226184BB9CA00B8A132 /* GBLaunchAtLogin.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				484E732C183BF07300AA0B1C /* Disk Activity */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GBLaunchAtLogin.framework;
+			remoteRef = 48C8E22A184BB9CA00B8A132 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		484E732B183BF07300AA0B1C /* Resources */ = {

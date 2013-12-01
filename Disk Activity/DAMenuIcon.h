@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <IOKit/IOKitLib.h>
 #import <IOKit/storage/IOBlockStorageDriver.h>
+#import "GBLaunchAtLogin/GBLaunchAtLogin/GBLaunchAtLogin.h"
 
 struct io {
     UInt64 input;
@@ -48,40 +49,5 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
  *  Set if show or not text in the Status bar
  */
 @property BOOL text;
-
-/**
- *  Method called from Timer. Updates disk activity and shows it
- *
- *  @param sender
- */
-- (IBAction)updateDiskUsage:(id)sender;
-
-/**
- *  Quit the app
- *
- *  @param sender
- */
-- (IBAction)quit:(id)sender;
-
-/**
- *  Show preferences, nothing for now
- *
- *  @param sender
- */
-- (IBAction)preferences:(id)sender;
-
-/**
- *  Show/Hide icon from status bar
- *
- *  @param sender
- */
-- (IBAction)showHideIcon:(id)sender;
-
-/**
- *  Show/Hide text from status bar
- *
- *  @param sender
- */
-- (IBAction)showHideText:(id)sender;
 
 @end

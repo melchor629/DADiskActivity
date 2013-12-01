@@ -10,3 +10,4 @@
 "ShowIcon"      = "Mostrar icono de actividad";
 "ShowText"      = "Mostrar velocidad";
 "Quit"          = "Salir";
+"StartAtLogin"  = "Abrir al iniciar";
