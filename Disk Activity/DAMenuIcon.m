@@ -59,7 +59,6 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s) {
 io_s io;
 io_iterator_t drivelist  = IO_OBJECT_NULL;
 mach_port_t masterPort = IO_OBJECT_NULL;
-int quitI, preferencesI, iconI, textI, salI;
 
 @synthesize graphImage = anImage;
 
@@ -68,7 +67,6 @@ int quitI, preferencesI, iconI, textI, salI;
 }
 
 - (void)awakeFromNib {
-    int index = 0;
     _icon = false;
     _text = true;
 
@@ -85,11 +83,11 @@ int quitI, preferencesI, iconI, textI, salI;
     [sal setTarget:self]; [sal setState:([GBLaunchAtLogin isLoginItem] ? NSOnState : NSOffState)];
     //Alloc and init Menu and fill with menu items
     menu = [[NSMenu alloc] initWithTitle:@"Disk Activity"];
-    [menu insertItem:icon atIndex:index]; iconI = index++;
-    [menu insertItem:text atIndex:index]; textI = index++;
-    [menu insertItem:preferences atIndex:index]; preferencesI = index++;
-    [menu insertItem:sal atIndex:index]; salI = index++;
-    [menu insertItem:quit atIndex:index]; quitI = index++;
+    [menu addItem:icon];
+    [menu addItem:text];
+    [menu addItem:preferences];
+    [menu addItem:sal];
+    [menu addItem:quit];
 
     //Add the item to Status Bar
     statusItem = [[NSStatusBar systemStatusBar]
@@ -200,38 +198,39 @@ int quitI, preferencesI, iconI, textI, salI;
 
 - (IBAction)showHideIcon:(id)sender {
     _icon = !_icon;
+    NSMenuItem *icon = [menu itemWithTitle:loc(@"ShowIcon")];
     if(_icon)
-        [[menu itemAtIndex:iconI] setState:NSOnState];
+        [icon setState:NSOnState];
     else if(!_icon && _text)
-        [[menu itemAtIndex:iconI] setState:NSOffState];
+        [icon setState:NSOffState];
     else if(!_icon && !_text) {
-        [[menu itemAtIndex:iconI] setState:NSOffState];
-        [[menu itemAtIndex:textI] setState:NSOnState];
+        [icon setState:NSOffState];
+        [[menu itemWithTitle:loc(@"ShowText")] setState:NSOnState];
         _text = true;
     }
 }
 
 - (IBAction)showHideText:(id)sender {
     _text = !_text;
-    if(!_text && _icon)
-        [menu setTitle:@""];
-    else if(!_text && !_icon) {
+    NSMenuItem *text = [menu itemWithTitle:loc(@"ShowText")];
+    if(!_text && !_icon) {
         _icon = true;
-        [[menu itemAtIndex:iconI] setState:NSOnState];
+        [[menu itemWithTitle:loc(@"ShowIcon")] setState:NSOnState];
     }
     if(_text)
-        [[menu itemAtIndex:textI] setState:NSOnState];
+        [text setState:NSOnState];
     else
-        [[menu itemAtIndex:textI] setState:NSOffState];
+        [text setState:NSOffState];
 }
 
 -(IBAction)startAtLogin:(id)sender {
-    if(![GBLaunchAtLogin isLoginItem] && [[menu itemAtIndex:salI] state] == NSOffState) {
+    NSMenuItem *sal = [menu itemWithTitle:loc(@"StartAtLogin")];
+    if(![GBLaunchAtLogin isLoginItem] && [sal state] == NSOffState) {
         [GBLaunchAtLogin addAppAsLoginItem];
-        [[menu itemAtIndex:salI] setState:NSOnState];
-    } else if([GBLaunchAtLogin isLoginItem] && [[menu itemAtIndex:salI] state] == NSOnState) {
+        [sal setState:NSOnState];
+    } else if([GBLaunchAtLogin isLoginItem] && [sal state] == NSOnState) {
         [GBLaunchAtLogin removeAppFromLoginItems];
-        [[menu itemAtIndex:salI] setState:NSOffState];
+        [sal setState:NSOffState];
     }
 }
 

@@ -17,6 +17,7 @@
 		484E734C183BF07300AA0B1C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 484E734B183BF07300AA0B1C /* Images.xcassets */; };
 		48C8E22C184BBBA100B8A132 /* GBLaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; };
 		48E95AEF18412E83003EA019 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48E95AED18412E83003EA019 /* Localizable.strings */; };
+		48EDC10F184BC15A000DFE65 /* GBLaunchAtLogin.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,19 @@
 			remoteInfo = GBLaunchAtLogin;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		48EDC10E184BC151000DFE65 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				48EDC10F184BC15A000DFE65 /* GBLaunchAtLogin.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		48374F9C183BFFBB003AA802 /* DAMenuIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAMenuIcon.h; sourceTree = "<group>"; };
@@ -148,6 +162,7 @@
 				484E7329183BF07300AA0B1C /* Sources */,
 				484E732A183BF07300AA0B1C /* Frameworks */,
 				484E732B183BF07300AA0B1C /* Resources */,
+				48EDC10E184BC151000DFE65 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -357,6 +372,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Disk Activity/Disk Activity-Prefix.pch";
 				INFOPLIST_FILE = "Disk Activity/Disk Activity-Info.plist";
+				OTHER_CODE_SIGN_FLAGS = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -371,6 +387,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Disk Activity/Disk Activity-Prefix.pch";
 				INFOPLIST_FILE = "Disk Activity/Disk Activity-Info.plist";
+				OTHER_CODE_SIGN_FLAGS = "--deep";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
