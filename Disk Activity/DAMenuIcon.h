@@ -50,4 +50,21 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
  */
 @property BOOL text;
 
+/**
+ *  Change the value of a (settings) item
+ *
+ *  @param object Value object to change to
+ *  @param key    Key of the setting
+ */
++ (void)setPreference:(id)object withKey:(NSString*)key;
+
+/**
+ *  Obtain the value of a (settings) item
+ *
+ *  @param key Key of the setting
+ *
+ *  @return Value object for the key
+ */
++ (id)getPreference:(NSString*)key;
+
 @end

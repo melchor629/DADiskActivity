@@ -57,8 +57,8 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s) {
 
 @implementation DAMenuIcon
 io_s io;
-io_iterator_t drivelist  = IO_OBJECT_NULL;
-mach_port_t masterPort = IO_OBJECT_NULL;
+io_iterator_t drivelist = IO_OBJECT_NULL;
+mach_port_t masterPort  = IO_OBJECT_NULL;
 
 @synthesize graphImage = anImage;
 
@@ -67,8 +67,10 @@ mach_port_t masterPort = IO_OBJECT_NULL;
 }
 
 - (void)awakeFromNib {
-    _icon = false;
-    _text = true;
+    //Preferences
+    [self preferences];
+    _icon = [[DAMenuIcon getPreference:@"ShowIcon"] boolValue];
+    _text = [[DAMenuIcon getPreference:@"ShowText"] boolValue];
 
     //Add menu items
     NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:loc(@"Quit") action:@selector(quit:) keyEquivalent:@""];
@@ -78,8 +80,8 @@ mach_port_t masterPort = IO_OBJECT_NULL;
     NSMenuItem *sal = [[NSMenuItem alloc] initWithTitle:loc(@"StartAtLogin") action:@selector(startAtLogin:) keyEquivalent:@""];
     [quit setTarget:self];
     [preferences setTarget:self];
-    [icon setTarget:self];
-    [text setTarget:self]; [text setState:NSOnState];
+    [icon setTarget:self]; [icon setState:_icon ? NSOnState : NSOffState];
+    [text setTarget:self]; [text setState:_text ? NSOnState : NSOffState];
     [sal setTarget:self]; [sal setState:([GBLaunchAtLogin isLoginItem] ? NSOnState : NSOffState)];
     //Alloc and init Menu and fill with menu items
     menu = [[NSMenu alloc] initWithTitle:@"Disk Activity"];
@@ -184,7 +186,7 @@ mach_port_t masterPort = IO_OBJECT_NULL;
     }
 
     //Set final image
-    [statusItem setImage:anImage];
+    [statusItem setImage:anImage];[anImage setBackgroundColor:[NSColor colorWithRed:1 green:1 blue:1 alpha:1]];
     [statusItem setAlternateImage:anImage];
 }
 
@@ -198,6 +200,8 @@ mach_port_t masterPort = IO_OBJECT_NULL;
 
 - (IBAction)showHideIcon:(id)sender {
     _icon = !_icon;
+    [DAMenuIcon setPreference:[NSNumber numberWithBool:_icon] withKey:@"ShowIcon"];
+    [DAMenuIcon setPreference:[NSNumber numberWithBool:_text] withKey:@"ShowText"];
     NSMenuItem *icon = [menu itemWithTitle:loc(@"ShowIcon")];
     if(_icon)
         [icon setState:NSOnState];
@@ -223,15 +227,34 @@ mach_port_t masterPort = IO_OBJECT_NULL;
         [text setState:NSOffState];
 }
 
--(IBAction)startAtLogin:(id)sender {
+- (IBAction)startAtLogin:(id)sender {
     NSMenuItem *sal = [menu itemWithTitle:loc(@"StartAtLogin")];
     if(![GBLaunchAtLogin isLoginItem] && [sal state] == NSOffState) {
         [GBLaunchAtLogin addAppAsLoginItem];
         [sal setState:NSOnState];
+        [DAMenuIcon setPreference:[NSNumber numberWithBool:YES] withKey:@"OpenAtStart"];
     } else if([GBLaunchAtLogin isLoginItem] && [sal state] == NSOnState) {
         [GBLaunchAtLogin removeAppFromLoginItems];
         [sal setState:NSOffState];
+        [DAMenuIcon setPreference:[NSNumber numberWithBool:NO] withKey:@"OpenAtStart"];
     }
+}
+
+- (void)preferences {
+    NSMutableDictionary *appDefaults = [NSMutableDictionary
+                                 dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"ShowIcon"];
+    [appDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"ShowText"];
+    [appDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"OpenAtStart"];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+}
+
++ (void)setPreference:(id)object withKey:(NSString*)key {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:object forKey:key];
+}
+
++ (id)getPreference:(NSString*)key {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:key];
 }
 
 @end
