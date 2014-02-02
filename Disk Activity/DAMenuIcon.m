@@ -96,7 +96,7 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s, NSObject *this) {
 io_s io;
 io_iterator_t drivelist = IO_OBJECT_NULL;
 mach_port_t masterPort  = IO_OBJECT_NULL;
-mach_port_t port;
+IONotificationPortRef ionotif, terminationNotificationPort;
 DAMenuIcon *this;
 
 @synthesize graphImage = anImage;
@@ -177,8 +177,8 @@ void devicePlugged() {
 
     /* Add a listener to watch Un/Plug of devices */
     /* http://stackoverflow.com/questions/9918429/how-to-know-when-a-hid-usb-bluetooth-device-is-connected-in-cocoa/9918575#9918575 */
-    port = 0;
-    IONotificationPortRef ionotif = IONotificationPortCreate(port);
+    mach_port_t port = 0;
+    ionotif = IONotificationPortCreate(port);
     CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(ionotif), kCFRunLoopDefaultMode);
     CFMutableDictionaryRef matchingDict = IOServiceMatching("IOBlockStorageDriver");
     CFRetain(matchingDict); // Need to use it twice and IOServiceAddMatchingNotification() consumes a reference
@@ -196,7 +196,7 @@ void devicePlugged() {
     while (IOIteratorNext(portIterator)) {}; // Run out the iterator or notifications won't start (you can also use it to iterate the available devices).
 
     // Also register for removal notifications
-    IONotificationPortRef terminationNotificationPort = IONotificationPortCreate(kIOMasterPortDefault);
+    terminationNotificationPort = IONotificationPortCreate(kIOMasterPortDefault);
     CFRunLoopAddSource(CFRunLoopGetCurrent(),
                        IONotificationPortGetRunLoopSource(terminationNotificationPort),
                        kCFRunLoopDefaultMode);
@@ -285,7 +285,8 @@ void devicePlugged() {
 }
 
 - (IBAction)quit:(id)sender {
-    IONotificationPortDestroy(port);
+    IONotificationPortDestroy(ionotif);
+    IONotificationPortDestroy(terminationNotificationPort);
     exit(0);
 }
 
