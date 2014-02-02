@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <IOKit/IOKitLib.h>
+#include <IOKit/serial/IOSerialKeys.h>
+#include <IOKit/IOBSD.h>
 #import <IOKit/storage/IOBlockStorageDriver.h>
 #import "GBLaunchAtLogin/GBLaunchAtLogin/GBLaunchAtLogin.h"
 
@@ -19,7 +21,7 @@ struct io {
 };
 typedef struct io io_s;
 
-void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
+void getDISKcounters(io_iterator_t drivelist, struct io *io_s, NSObject *this);
 
 /**
  *  Main Class, Application Delegate, where all the action happends, for now
@@ -51,6 +53,11 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
 @property BOOL text;
 
 /**
+ *  A dictionary with the Product name of a disk
+ */
+@property (strong) NSMutableDictionary *disks;
+
+/**
  *  Change the value of a (settings) item
  *
  *  @param object Value object to change to
@@ -66,5 +73,16 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s);
  *  @return Value object for the key
  */
 + (id)getPreference:(NSString*)key;
+
+/**
+ *  IBAction methods
+ */
+- (IBAction)updateDiskUsage:(id)sender;
+- (IBAction)quit:(id)sender;
+- (IBAction)preferences:(id)sender;
+- (IBAction)showHideIcon:(id)sender;
+- (IBAction)showHideText:(id)sender;
+- (IBAction)startAtLogin:(id)sender;
+- (IBAction)diskElementClick:(id)sender;
 
 @end
