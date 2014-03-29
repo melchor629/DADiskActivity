@@ -176,7 +176,7 @@ void devicePlugged() {
     [statusItem setHighlightMode:YES];
     [statusItem setEnabled:YES];
     [statusItem setMenu:menu];
-    [statusItem setTarget:self];
+    [statusItem setAction:@selector(onMouse:)];
 
     //Timer to update information
     updateTimer = [NSTimer
@@ -272,13 +272,13 @@ void devicePlugged() {
                                     NSFontAttributeName, green,
                                     NSForegroundColorAttributeName, style,
                                     NSParagraphStyleAttributeName, nil];
-        [readS drawInRect:NSMakeRect(_icon ? 16 : 0, 12, [anImage size].width, 10) withAttributes:attributes];
+        [readS drawInRect:NSMakeRect(_icon ? 18 : 0, 12, [anImage size].width, 10) withAttributes:attributes];
         //Write speed
         attributes = [NSDictionary dictionaryWithObjectsAndKeys:f,
                       NSFontAttributeName, red,
                       NSForegroundColorAttributeName, style,
                       NSParagraphStyleAttributeName, nil];
-        [writeS drawInRect:NSMakeRect(_icon ? 16 : 0, 2, [anImage size].width, 10) withAttributes:attributes];
+        [writeS drawInRect:NSMakeRect(_icon ? 18 : 0, 2, [anImage size].width, 10) withAttributes:attributes];
         [anImage unlockFocus];
     }
 
@@ -289,16 +289,28 @@ void devicePlugged() {
         write = write > 18.0 ? 18.0 : write;
 
         [anImage lockFocus];
+
         //Background bars
         [[NSColor colorWithRed:100/255.0 green:100/255.0 blue:100/255.0 alpha:0.3] setFill];
-        [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 1, 5, 18)] fill];
-        [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 1, 5, 18)] fill];
-        //Read bar
-        [green setFill];
-        [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 1, 5, read)] fill];
+        for(int i = 0; i < 6; i++) {
+            [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 2 + 3*i, 6, 1.7)] fill];
+            [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 2 + 3*i, 6, 1.7)] fill];
+        }
+
         //Write bar
+        [green setFill];
+        for(int i = 0; i < 6; i++) {
+            if(3.6*(i+1) < read)
+                [[NSBezierPath bezierPathWithRect:NSMakeRect(2, 2 + 3*i, 6, 1.7)] fill];
+        }
+
+        //Red bar
         [red setFill];
-        [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 1, 5, write)] fill];
+        for(int i = 0; i < 6; i++) {
+            if(3.6*(i+1) < write)
+                [[NSBezierPath bezierPathWithRect:NSMakeRect(9, 2 + 3*i, 6, 1.7)] fill];
+        }
+
         [anImage unlockFocus];
     }
 
