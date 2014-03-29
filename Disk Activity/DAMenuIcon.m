@@ -14,7 +14,6 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s, NSObject *this) {
     UInt64          totalWriteBytes = 0;
     DAMenuIcon *self = (DAMenuIcon*) this;
     NSDictionary *disks = [self disks];
-    NSMutableArray *validDisks = [[NSMutableArray alloc] init];
 
     while ((drive = IOIteratorNext(drivelist))) {
         CFNumberRef     number      = 0;  /* don't release */
@@ -39,13 +38,9 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s, NSObject *this) {
         CFRelease(properties2); properties2 = 0;
         NSString *nsstr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
 
-        if(![disks objectForKey:nsstr])
-            [disks setValue:[NSNumber numberWithInt:1] forKey:nsstr];
-
         //Determine if has to appear in the disk activity or not
         if(![((NSNumber*) [disks valueForKey:nsstr]) boolValue])
             continue;
-        [validDisks addObject:nsstr];
 
         /* Obtain the properties for this drive object */
         IORegistryEntryCreateCFProperties(drive, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
@@ -76,16 +71,6 @@ void getDISKcounters(io_iterator_t drivelist, io_s *io_s, NSObject *this) {
     }
     IOIteratorReset(drivelist);
 
-    NSSet *set = [disks keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
-        return true;
-    }];
-    NSEnumerator *nsenum = [set objectEnumerator];
-    NSString *key;
-    while((key = [nsenum nextObject])) {
-        if([validDisks indexOfObject:key] == NSNotFound)
-            [disks setValue:nil forKey:key];
-    }
-
     io_s->ispeed = totalReadBytes - io_s->input;
     io_s->ospeed = totalWriteBytes - io_s->output;
     io_s->input = totalReadBytes;
@@ -106,6 +91,44 @@ void devicePlugged() {
     IOServiceGetMatchingServices(masterPort,
                                  IOServiceMatching("IOBlockStorageDriver"),
                                  &drivelist);
+
+    io_registry_entry_t drive       = 0;  /* needs release */
+    DAMenuIcon *self = (DAMenuIcon*) this;
+    NSMutableDictionary *disks = [self disks];
+    NSMutableArray *validDisks = [[NSMutableArray alloc] init];
+
+    while ((drive = IOIteratorNext(drivelist))) {
+        /* Obtain the name of the Device (not partition) */
+        const char* str;
+        CFStringRef cfstr;
+        io_registry_entry_t hdd = 0;
+        CFDictionaryRef properties2 = 0;
+        CFDictionaryRef statistics2 = 0;
+
+        IORegistryEntryGetParentEntry(drive, kIOServicePlane, &hdd);
+        IORegistryEntryCreateCFProperties(hdd, (CFMutableDictionaryRef*) &properties2, kCFAllocatorDefault, kNilOptions);
+        statistics2 = (CFDictionaryRef) CFDictionaryGetValue(properties2, CFSTR("Device Characteristics"));
+        cfstr = (CFStringRef) CFDictionaryGetValue(statistics2, CFSTR("Product Name"));
+        str = CFStringGetCStringPtr(cfstr, CFStringGetSystemEncoding());
+
+        NSString *nsstr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
+        [validDisks addObject:nsstr];
+
+        /* Release resources */
+        IOObjectRelease(drive); drive = 0;
+        IOObjectRelease(hdd); hdd = 0;
+        CFRelease(properties2); properties2 = 0;
+
+    }
+    IOIteratorReset(drivelist);
+
+    NSEnumerator *nsenum = [validDisks objectEnumerator];
+    NSString * key;
+    while((key = [nsenum nextObject])) {
+        if([disks objectForKey:key] == nil)
+            [disks setValue:[NSNumber numberWithInt:1] forKey:key];
+    }
+
     getDISKcounters(drivelist, &io, this);
 }
 
@@ -173,6 +196,7 @@ void devicePlugged() {
                                  IOServiceMatching("IOBlockStorageDriver"),
                                  &drivelist);
     /* Update counters for first time */
+    devicePlugged();
     getDISKcounters(drivelist, &io, self);
 
     /* Add a listener to watch Un/Plug of devices */
