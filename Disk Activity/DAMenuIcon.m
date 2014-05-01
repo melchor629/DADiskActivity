@@ -124,9 +124,14 @@ void devicePlugged() {
 
     NSEnumerator *nsenum = [validDisks objectEnumerator];
     NSString * key;
+    NSString *a = [DAMenuIcon getPreference:@"SelectedDisk"];
     while((key = [nsenum nextObject])) {
-        if([disks objectForKey:key] == nil)
-            [disks setValue:[NSNumber numberWithInt:1] forKey:key];
+        if([disks objectForKey:key] == nil) {
+            if(a)
+                [disks setValue:[NSNumber numberWithInt:[key isEqualToString:a] ? 1 : 0] forKey:key];
+            else
+                [disks setValue:[NSNumber numberWithInt:[key hasPrefix:@"APPLE"] ? 1 : 0] forKey:key];
+        }
     }
 
     getDISKcounters(drivelist, &io, this);
@@ -375,12 +380,13 @@ void devicePlugged() {
 - (IBAction)diskElementClick:(id)sender {
     NSMenuItem *disk = (NSMenuItem*) sender;
     NSString *key = [disk title];
-    if([disk state] == NSOnState) {
-        [disks setValue:[NSNumber numberWithInt:0] forKey:key];
-        [disk setState:NSOffState];
-    } else if([disk state] == NSOffState) {
+    if([disk state] == NSOffState) {
+        NSArray *KEYS = [disks allKeys];
+        for(int i = 0; i < [KEYS count]; i++)
+            [disks setValue:[NSNumber numberWithInt:0] forKey:[KEYS objectAtIndex:i]];
         [disks setValue:[NSNumber numberWithInt:1] forKey:key];
         [disk setState:NSOnState];
+        [DAMenuIcon setPreference:key withKey:@"SelectedDisk"];
     }
     getDISKcounters(drivelist, &io, self); //TODO Temp FIX
 }
