@@ -125,6 +125,7 @@ void devicePlugged() {
     NSEnumerator *nsenum = [validDisks objectEnumerator];
     NSString * key;
     NSString *a = [DAMenuIcon getPreference:@"SelectedDisk"];
+    if(![validDisks containsObject:a]) a = NULL;
     while((key = [nsenum nextObject])) {
         if([disks objectForKey:key] == nil) {
             if(a)
@@ -133,7 +134,7 @@ void devicePlugged() {
                 [disks setValue:[NSNumber numberWithInt:[key hasPrefix:@"APPLE"] ? 1 : 0] forKey:key];
         }
     }
-
+    NSLog(@"Something connected");
     getDISKcounters(drivelist, &io, this);
 }
 
