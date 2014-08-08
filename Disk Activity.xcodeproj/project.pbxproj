@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		48374F9E183BFFBB003AA802 /* DAMenuIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 48374F9D183BFFBB003AA802 /* DAMenuIcon.m */; };
+		483F73121915A741003C28F2 /* DAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 483F73111915A741003C28F2 /* DAImageView.m */; };
 		48418F73183D1F48006E16FA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48418F72183D1F48006E16FA /* IOKit.framework */; };
 		484E7331183BF07300AA0B1C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 484E7330183BF07300AA0B1C /* Cocoa.framework */; };
 		484E733B183BF07300AA0B1C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 484E7339183BF07300AA0B1C /* InfoPlist.strings */; };
@@ -46,6 +47,8 @@
 /* Begin PBXFileReference section */
 		48374F9C183BFFBB003AA802 /* DAMenuIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAMenuIcon.h; sourceTree = "<group>"; };
 		48374F9D183BFFBB003AA802 /* DAMenuIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAMenuIcon.m; sourceTree = "<group>"; };
+		483F73101915A741003C28F2 /* DAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAImageView.h; sourceTree = "<group>"; };
+		483F73111915A741003C28F2 /* DAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAImageView.m; sourceTree = "<group>"; };
 		48418F72183D1F48006E16FA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		484E732D183BF07300AA0B1C /* Disk Activity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Disk Activity.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		484E7330183BF07300AA0B1C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -127,6 +130,8 @@
 				484E7337183BF07300AA0B1C /* Supporting Files */,
 				48374F9C183BFFBB003AA802 /* DAMenuIcon.h */,
 				48374F9D183BFFBB003AA802 /* DAMenuIcon.m */,
+				483F73101915A741003C28F2 /* DAImageView.h */,
+				483F73111915A741003C28F2 /* DAImageView.m */,
 			);
 			path = "Disk Activity";
 			sourceTree = "<group>";
@@ -248,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				483F73121915A741003C28F2 /* DAImageView.m in Sources */,
 				484E733D183BF07300AA0B1C /* main.m in Sources */,
 				48374F9E183BFFBB003AA802 /* DAMenuIcon.m in Sources */,
 			);

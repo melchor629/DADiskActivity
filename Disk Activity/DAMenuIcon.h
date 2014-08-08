@@ -12,6 +12,7 @@
 #include <IOKit/IOBSD.h>
 #import <IOKit/storage/IOBlockStorageDriver.h>
 #import "GBLaunchAtLogin/GBLaunchAtLogin/GBLaunchAtLogin.h"
+#include "DAImageView.h"
 
 struct io {
     UInt64 input;

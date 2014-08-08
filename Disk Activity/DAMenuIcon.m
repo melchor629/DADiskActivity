@@ -83,6 +83,7 @@ io_iterator_t drivelist = IO_OBJECT_NULL;
 mach_port_t masterPort  = IO_OBJECT_NULL;
 IONotificationPortRef ionotif, terminationNotificationPort;
 DAMenuIcon *this;
+DAImageView *v;
 
 @synthesize graphImage = anImage;
 @synthesize disks = disks;
@@ -145,6 +146,7 @@ void devicePlugged() {
 - (void)awakeFromNib {
     this = self;
     disks = [[NSMutableDictionary alloc] init];
+    v = [[DAImageView alloc] init];
     //Preferences
     [self preferences];
     _icon = [[DAMenuIcon getPreference:@"ShowIcon"] boolValue];
@@ -182,7 +184,6 @@ void devicePlugged() {
     [statusItem setHighlightMode:YES];
     [statusItem setEnabled:YES];
     [statusItem setMenu:menu];
-    [statusItem setAction:@selector(onMouse:)];
 
     //Timer to update information
     updateTimer = [NSTimer
@@ -192,6 +193,9 @@ void devicePlugged() {
                     userInfo:nil
                     repeats:YES];
     [updateTimer fire];
+
+    [v setMenu:menu];
+    v.statusItem = statusItem;
 
     /* Get ports and services for drive stats */
     /* Obtain the I/O Kit communication handle */
@@ -321,8 +325,9 @@ void devicePlugged() {
     }
 
     //Set final image
-    [statusItem setImage:anImage];[anImage setBackgroundColor:[NSColor colorWithRed:1 green:1 blue:1 alpha:1]];
-    [statusItem setAlternateImage:anImage];
+    [v setImage:anImage];
+    [v setFrame:NSMakeRect(0, 0, [anImage size].width, [anImage size].height+2)];
+    [statusItem setView:v];
     [self setDisksToMenu];
 }
 
