@@ -9,5 +9,6 @@
 "Preferences"   = "Preferences";
 "ShowIcon"      = "Show activity icon";
 "ShowText"      = "Show text speed";
-"Quit"          = "Quit"
+"Quit"          = "Quit";
 "StartAtLogin"  = "Start at login";
+"Disks"         = "Disks";

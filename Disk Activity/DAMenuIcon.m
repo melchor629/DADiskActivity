@@ -37,7 +37,7 @@ NSString* selectedDevice;
     NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:loc(@"ShowIcon") action:@selector(showHideIcon:) keyEquivalent:@""];
     NSMenuItem *text = [[NSMenuItem alloc] initWithTitle:loc(@"ShowText") action:@selector(showHideText:) keyEquivalent:@""];
     NSMenuItem *sal = [[NSMenuItem alloc] initWithTitle:loc(@"StartAtLogin") action:@selector(startAtLogin:) keyEquivalent:@""];
-    NSMenuItem *disk = [[NSMenuItem alloc] initWithTitle:@"Disks" action:NULL keyEquivalent:@""];
+    NSMenuItem *disk = [[NSMenuItem alloc] initWithTitle:loc(@"Disks") action:NULL keyEquivalent:@""];
 
     [quit setTarget:self];
     [disk setTarget:self];
@@ -46,7 +46,7 @@ NSString* selectedDevice;
     [text setTarget:self]; [text setState:_text ? NSOnState : NSOffState];
     [sal setTarget:self]; [sal setState:([GBLaunchAtLogin isLoginItem] ? NSOnState : NSOffState)];
 
-    NSMenu *diskM = [[NSMenu alloc] initWithTitle:@"Disks"];
+    NSMenu *diskM = [[NSMenu alloc] initWithTitle:loc(@"Disks")];
 
     //Alloc and init Menu and fill with menu items
     menu = [[NSMenu alloc] initWithTitle:@"Disk Activity"];
@@ -66,6 +66,7 @@ NSString* selectedDevice;
 
     [v setMenu:menu];
     v.statusItem = statusItem;
+    [statusItem setView:v];
 
     //Select stored device or get the first one
     selectedDevice = [DAMenuIcon getPreference:@"SelectedDisk"];
@@ -167,7 +168,6 @@ NSString* selectedDevice;
     //Set final image
     [v setImage:anImage];
     [v setFrame:NSMakeRect(0, 0, [anImage size].width, [anImage size].height+2)];
-    [statusItem setView:v];
 }
 
 - (IBAction)quit:(id)sender {
@@ -263,7 +263,7 @@ NSString* selectedDevice;
         [item setState: [selectedDevice isEqualToString:key]];
         [diskMenu addItem:item];
     }
-    [menu setSubmenu:diskMenu forItem:[menu itemWithTitle:@"Disks"]];
+    [menu setSubmenu:diskMenu forItem:[menu itemWithTitle:loc(@"Disks")]];
 }
 
 @end
