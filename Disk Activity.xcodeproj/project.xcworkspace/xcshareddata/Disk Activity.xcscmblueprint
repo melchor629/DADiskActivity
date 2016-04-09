@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "9A72F4540D4567D29113F9F5AE087AEE1CF94285",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "77319AF0ED8AAD1571E73EF8438B3921675CC4E7" : 0,
+    "9A72F4540D4567D29113F9F5AE087AEE1CF94285" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "051C90A0-2D99-4F1F-B5C1-EAE799F511B4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "77319AF0ED8AAD1571E73EF8438B3921675CC4E7" : "Disk%20ActivityDisk%20Activity\/GBLaunchAtLogin",
+    "9A72F4540D4567D29113F9F5AE087AEE1CF94285" : "Disk%20Activity"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Disk Activity",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Disk Activity.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lmirosevic\/GBLaunchAtLogin.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "77319AF0ED8AAD1571E73EF8438B3921675CC4E7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/melchor629\/DADiskActivity.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9A72F4540D4567D29113F9F5AE087AEE1CF94285"
+    }
+  ]
+}

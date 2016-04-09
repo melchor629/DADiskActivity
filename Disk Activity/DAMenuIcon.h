@@ -7,29 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <IOKit/IOKitLib.h>
-#include <IOKit/serial/IOSerialKeys.h>
-#include <IOKit/IOBSD.h>
-#import <IOKit/storage/IOBlockStorageDriver.h>
 #import "GBLaunchAtLogin/GBLaunchAtLogin/GBLaunchAtLogin.h"
-#include "DAImageView.h"
-
-struct io {
-    UInt64 input;
-    int64_t ispeed;
-    UInt64 output;
-    int64_t ospeed;
-};
-typedef struct io io_s;
-
-void getDISKcounters(io_iterator_t drivelist, struct io *io_s, NSObject *this);
+#import "DAImageView.h"
+#import "DAStorageDrives.h"
 
 /**
  *  Main Class, Application Delegate, where all the action happends, for now
  */
-@interface DAMenuIcon : NSObject <NSApplicationDelegate> {
+@interface DAMenuIcon : NSObject <NSApplicationDelegate, DAStorageDrivesDelegate> {
     NSStatusItem *statusItem;
-    NSTimer *updateTimer;
     NSMenu *menu;
 }
 
@@ -52,11 +38,6 @@ void getDISKcounters(io_iterator_t drivelist, struct io *io_s, NSObject *this);
  *  Set if show or not text in the Status bar
  */
 @property BOOL text;
-
-/**
- *  A dictionary with the Product name of a disk
- */
-@property (strong) NSMutableDictionary *disks;
 
 /**
  *  Change the value of a (settings) item

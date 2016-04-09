@@ -8,136 +8,13 @@
 
 #import "DAMenuIcon.h"
 
-void getDISKcounters(io_iterator_t drivelist, io_s *io_s, NSObject *this) {
-    io_registry_entry_t drive       = 0;  /* needs release */
-    UInt64          totalReadBytes  = 0;
-    UInt64          totalWriteBytes = 0;
-    DAMenuIcon *self = (DAMenuIcon*) this;
-    NSDictionary *disks = [self disks];
-
-    while ((drive = IOIteratorNext(drivelist))) {
-        CFNumberRef     number      = 0;  /* don't release */
-        CFDictionaryRef properties  = 0;  /* needs release */
-        CFDictionaryRef statistics  = 0;  /* don't release */
-        UInt64          value       = 0;
-
-        /* Obtain the name of the Device (not partition) */
-        const char* str;
-        CFStringRef cfstr;
-        io_registry_entry_t hdd = 0;
-        CFDictionaryRef properties2 = 0;
-        CFDictionaryRef statistics2 = 0;
-
-        IORegistryEntryGetParentEntry(drive, kIOServicePlane, &hdd);
-        IORegistryEntryCreateCFProperties(hdd, (CFMutableDictionaryRef*) &properties2, kCFAllocatorDefault, kNilOptions);
-        statistics2 = (CFDictionaryRef) CFDictionaryGetValue(properties2, CFSTR("Device Characteristics"));
-        cfstr = (CFStringRef) CFDictionaryGetValue(statistics2, CFSTR("Product Name"));
-        str = CFStringGetCStringPtr(cfstr, CFStringGetSystemEncoding());
-
-        IOObjectRelease(hdd); hdd = 0;
-        CFRelease(properties2); properties2 = 0;
-        NSString *nsstr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
-
-        //Determine if has to appear in the disk activity or not
-        if(![((NSNumber*) [disks valueForKey:nsstr]) boolValue])
-            continue;
-
-        /* Obtain the properties for this drive object */
-        IORegistryEntryCreateCFProperties(drive, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
-
-        /* Obtain the statistics from the drive properties */
-        statistics = (CFDictionaryRef) CFDictionaryGetValue(properties, CFSTR(kIOBlockStorageDriverStatisticsKey));
-
-        if (statistics) {
-            /* Obtain the number of bytes read from the drive statistics */
-            number = (CFNumberRef) CFDictionaryGetValue(statistics, CFSTR(kIOBlockStorageDriverStatisticsBytesReadKey));
-            if (number) {
-                CFNumberGetValue(number, kCFNumberSInt64Type, &value);
-                totalReadBytes += value;
-            }
-
-            /* Obtain the number of bytes written from the drive statistics */
-            number = (CFNumberRef) CFDictionaryGetValue(statistics, CFSTR(kIOBlockStorageDriverStatisticsBytesWrittenKey));
-            if (number) {
-                CFNumberGetValue(number, kCFNumberSInt64Type, &value);
-                totalWriteBytes += value;
-            }
-        }
-
-        /* Release resources */
-        CFRelease(properties); properties = 0;
-        IOObjectRelease(drive); drive = 0;
-
-    }
-    IOIteratorReset(drivelist);
-
-    io_s->ispeed = totalReadBytes - io_s->input;
-    io_s->ospeed = totalWriteBytes - io_s->output;
-    io_s->input = totalReadBytes;
-    io_s->output = totalWriteBytes;
-}
-
 @implementation DAMenuIcon
-io_s io;
-io_iterator_t drivelist = IO_OBJECT_NULL;
-mach_port_t masterPort  = IO_OBJECT_NULL;
-IONotificationPortRef ionotif, terminationNotificationPort;
 DAMenuIcon *this;
 DAImageView *v;
+DAStorageDrives *sto;
+NSString* selectedDevice;
 
 @synthesize graphImage = anImage;
-@synthesize disks = disks;
-
-void devicePlugged() {
-    IOServiceGetMatchingServices(masterPort,
-                                 IOServiceMatching("IOBlockStorageDriver"),
-                                 &drivelist);
-
-    io_registry_entry_t drive       = 0;  /* needs release */
-    DAMenuIcon *self = (DAMenuIcon*) this;
-    NSMutableDictionary *disks = [self disks];
-    NSMutableArray *validDisks = [[NSMutableArray alloc] init];
-
-    while ((drive = IOIteratorNext(drivelist))) {
-        /* Obtain the name of the Device (not partition) */
-        const char* str;
-        CFStringRef cfstr;
-        io_registry_entry_t hdd = 0;
-        CFDictionaryRef properties2 = 0;
-        CFDictionaryRef statistics2 = 0;
-
-        IORegistryEntryGetParentEntry(drive, kIOServicePlane, &hdd);
-        IORegistryEntryCreateCFProperties(hdd, (CFMutableDictionaryRef*) &properties2, kCFAllocatorDefault, kNilOptions);
-        statistics2 = (CFDictionaryRef) CFDictionaryGetValue(properties2, CFSTR("Device Characteristics"));
-        cfstr = (CFStringRef) CFDictionaryGetValue(statistics2, CFSTR("Product Name"));
-        str = CFStringGetCStringPtr(cfstr, CFStringGetSystemEncoding());
-
-        NSString *nsstr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
-        [validDisks addObject:nsstr];
-
-        /* Release resources */
-        IOObjectRelease(drive); drive = 0;
-        IOObjectRelease(hdd); hdd = 0;
-        CFRelease(properties2); properties2 = 0;
-
-    }
-    IOIteratorReset(drivelist);
-
-    NSEnumerator *nsenum = [validDisks objectEnumerator];
-    NSString * key;
-    NSString *a = [DAMenuIcon getPreference:@"SelectedDisk"];
-    if(![validDisks containsObject:a]) a = NULL;
-    while((key = [nsenum nextObject])) {
-        if([disks objectForKey:key] == nil) {
-            if(a)
-                [disks setValue:[NSNumber numberWithInt:[key isEqualToString:a] ? 1 : 0] forKey:key];
-            else
-                [disks setValue:[NSNumber numberWithInt:[key hasPrefix:@"APPLE"] ? 1 : 0] forKey:key];
-        }
-    }
-    NSLog(@"Something connected");
-    getDISKcounters(drivelist, &io, this);
-}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
@@ -145,8 +22,10 @@ void devicePlugged() {
 
 - (void)awakeFromNib {
     this = self;
-    disks = [[NSMutableDictionary alloc] init];
     v = [[DAImageView alloc] init];
+    sto = [[DAStorageDrives alloc] init];
+    [sto setDelegate:this];
+
     //Preferences
     [self preferences];
     _icon = [[DAMenuIcon getPreference:@"ShowIcon"] boolValue];
@@ -185,67 +64,28 @@ void devicePlugged() {
     [statusItem setEnabled:YES];
     [statusItem setMenu:menu];
 
-    //Timer to update information
-    updateTimer = [NSTimer
-                    scheduledTimerWithTimeInterval:(1.0)
-                    target:self
-                    selector:@selector(updateDiskUsage:)
-                    userInfo:nil
-                    repeats:YES];
-    [updateTimer fire];
-
     [v setMenu:menu];
     v.statusItem = statusItem;
 
-    /* Get ports and services for drive stats */
-    /* Obtain the I/O Kit communication handle */
-    IOMasterPort(bootstrap_port, &masterPort);
+    //Select stored device or get the first one
+    selectedDevice = [DAMenuIcon getPreference:@"SelectedDisk"];
+    if(selectedDevice == nil) {
+        selectedDevice = [[sto drives] firstObject];
+    }
+    [self setDisksToMenu];
+}
 
-    /* Obtain the list of all drive objects */
-    IOServiceGetMatchingServices(masterPort,
-                                 IOServiceMatching("IOBlockStorageDriver"),
-                                 &drivelist);
-    /* Update counters for first time */
-    devicePlugged();
-    getDISKcounters(drivelist, &io, self);
+- (void) speedCalculated:(DAStorageDrives*) this {
+    [self updateDiskUsage:this];
+}
 
-    /* Add a listener to watch Un/Plug of devices */
-    /* http://stackoverflow.com/questions/9918429/how-to-know-when-a-hid-usb-bluetooth-device-is-connected-in-cocoa/9918575#9918575 */
-    mach_port_t port = 0;
-    ionotif = IONotificationPortCreate(port);
-    CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(ionotif), kCFRunLoopDefaultMode);
-    CFMutableDictionaryRef matchingDict = IOServiceMatching("IOBlockStorageDriver");
-    CFRetain(matchingDict); // Need to use it twice and IOServiceAddMatchingNotification() consumes a reference
-
-    CFDictionaryAddValue(matchingDict, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDRS232Type));
-
-    io_iterator_t portIterator = 0;
-    // Register for notifications when a serial port is added to the system
-    kern_return_t result = IOServiceAddMatchingNotification(ionotif,
-                                                            kIOPublishNotification,
-                                                            matchingDict,
-                                                            devicePlugged,
-                                                            (__bridge void *)(self),
-                                                            &portIterator);
-    while (IOIteratorNext(portIterator)) {}; // Run out the iterator or notifications won't start (you can also use it to iterate the available devices).
-
-    // Also register for removal notifications
-    terminationNotificationPort = IONotificationPortCreate(kIOMasterPortDefault);
-    CFRunLoopAddSource(CFRunLoopGetCurrent(),
-                       IONotificationPortGetRunLoopSource(terminationNotificationPort),
-                       kCFRunLoopDefaultMode);
-    result = IOServiceAddMatchingNotification(terminationNotificationPort,
-                                              kIOTerminatedNotification,
-                                              matchingDict,
-                                              devicePlugged,
-                                              (__bridge void *)(self),         // refCon/contextInfo
-                                              &portIterator);
-
-    while (IOIteratorNext(portIterator)) {}; // Run out the iterator or notifications won't start (you can also use it to iterate the available devices).
+- (void) drivesChanged:(DAStorageDrives*) this {
+    [self setDisksToMenu];
 }
 
 - (IBAction)updateDiskUsage:(id)sender {
-    getDISKcounters(drivelist, &io, self);
+    io_speed_t io = *[sto speedForDevice:selectedDevice];
+
     float imgWidth = 60.0;
          if(_text && !_icon) imgWidth = 44;
     else if(!_text && _icon) imgWidth = 16;
@@ -256,18 +96,18 @@ void devicePlugged() {
 
     if(_text) {
         if(io.ispeed < 1000)
-            readS = [readS initWithFormat:@"%lliB/s", io.ispeed];
+            readS = [readS initWithFormat:@"%uB/s", io.ispeed];
         else if(io.ispeed/1000 < 1000)
-            readS = [readS initWithFormat:@"%lliKB/s", io.ispeed/1000];
+            readS = [readS initWithFormat:@"%uKB/s", io.ispeed/1000];
         else if(io.ispeed/1000/1000 < 1000)
             readS = [readS initWithFormat:@"%.1fMB/s", io.ispeed/1000.0/1000.0];
         else if(io.ispeed/1000/1000 > 1000)
             readS = [readS initWithFormat:@"%.1GB/s", io.ispeed/1000.0/1000.0/1000.0];
 
         if(io.ospeed < 1000)
-            writeS = [writeS initWithFormat:@"%lliB/s", io.ospeed];
+            writeS = [writeS initWithFormat:@"%uB/s", io.ospeed];
         else if(io.ospeed/1000 < 1000)
-            writeS = [writeS initWithFormat:@"%lliKB/s", io.ospeed/1000];
+            writeS = [writeS initWithFormat:@"%uKB/s", io.ospeed/1000];
         else if(io.ospeed/1000/1000 < 1000)
             writeS = [writeS initWithFormat:@"%.1fMB/s", io.ospeed/1000.0/1000.0];
         else if(io.ospeed/1000/1000 > 1000)
@@ -328,12 +168,9 @@ void devicePlugged() {
     [v setImage:anImage];
     [v setFrame:NSMakeRect(0, 0, [anImage size].width, [anImage size].height+2)];
     [statusItem setView:v];
-    [self setDisksToMenu];
 }
 
 - (IBAction)quit:(id)sender {
-    IONotificationPortDestroy(ionotif);
-    IONotificationPortDestroy(terminationNotificationPort);
     exit(0);
 }
 
@@ -387,14 +224,16 @@ void devicePlugged() {
     NSMenuItem *disk = (NSMenuItem*) sender;
     NSString *key = [disk title];
     if([disk state] == NSOffState) {
-        NSArray *KEYS = [disks allKeys];
-        for(int i = 0; i < [KEYS count]; i++)
-            [disks setValue:[NSNumber numberWithInt:0] forKey:[KEYS objectAtIndex:i]];
-        [disks setValue:[NSNumber numberWithInt:1] forKey:key];
+        NSEnumerator* en = [[menu itemArray] objectEnumerator];
+        NSMenuItem* item;
+        while((item = [en nextObject]) != nil) {
+            [item setState:NSOffState];
+        }
+
         [disk setState:NSOnState];
         [DAMenuIcon setPreference:key withKey:@"SelectedDisk"];
+        selectedDevice = key;
     }
-    getDISKcounters(drivelist, &io, self); //TODO Temp FIX
 }
 
 - (void)preferences {
@@ -415,13 +254,13 @@ void devicePlugged() {
 }
 
 - (void)setDisksToMenu {
-    NSEnumerator *nsenum = [disks keyEnumerator];
+    NSEnumerator *nsenum = [[sto drives] objectEnumerator];
     NSString *key;
     NSMenu *diskMenu = [[NSMenu alloc] init];
     while((key = [nsenum nextObject])) {
         NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:key action:@selector(diskElementClick:) keyEquivalent:@""];
         [item setTarget:self];
-        [item setState:[(((NSNumber*) [disks valueForKey:key])) integerValue]];
+        [item setState: [selectedDevice isEqualToString:key]];
         [diskMenu addItem:item];
     }
     [menu setSubmenu:diskMenu forItem:[menu itemWithTitle:@"Disks"]];

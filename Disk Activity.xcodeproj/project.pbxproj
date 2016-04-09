@@ -16,9 +16,10 @@
 		484E7341183BF07300AA0B1C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 484E733F183BF07300AA0B1C /* Credits.rtf */; };
 		484E7347183BF07300AA0B1C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 484E7345183BF07300AA0B1C /* MainMenu.xib */; };
 		484E734C183BF07300AA0B1C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 484E734B183BF07300AA0B1C /* Images.xcassets */; };
+		487FF9881CB94BC700796A60 /* DAStorageDrives.m in Sources */ = {isa = PBXBuildFile; fileRef = 487FF9871CB94BC700796A60 /* DAStorageDrives.m */; };
 		48C8E22C184BBBA100B8A132 /* GBLaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; };
 		48E95AEF18412E83003EA019 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48E95AED18412E83003EA019 /* Localizable.strings */; };
-		48EDC10F184BC15A000DFE65 /* GBLaunchAtLogin.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; };
+		48EDC10F184BC15A000DFE65 /* GBLaunchAtLogin.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48C8E22B184BB9CA00B8A132 /* GBLaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		484E7340183BF07300AA0B1C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		484E7346183BF07300AA0B1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		484E734B183BF07300AA0B1C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		487FF9861CB94BC700796A60 /* DAStorageDrives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAStorageDrives.h; sourceTree = "<group>"; };
+		487FF9871CB94BC700796A60 /* DAStorageDrives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAStorageDrives.m; sourceTree = "<group>"; };
 		48C8E226184BB9CA00B8A132 /* GBLaunchAtLogin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GBLaunchAtLogin.xcodeproj; path = "Disk Activity/GBLaunchAtLogin/GBLaunchAtLogin.xcodeproj"; sourceTree = "<group>"; };
 		48E95AEC18412CF5003EA019 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
 		48E95AEE18412E83003EA019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -132,6 +135,8 @@
 				48374F9D183BFFBB003AA802 /* DAMenuIcon.m */,
 				483F73101915A741003C28F2 /* DAImageView.h */,
 				483F73111915A741003C28F2 /* DAImageView.m */,
+				487FF9861CB94BC700796A60 /* DAStorageDrives.h */,
+				487FF9871CB94BC700796A60 /* DAStorageDrives.m */,
 			);
 			path = "Disk Activity";
 			sourceTree = "<group>";
@@ -185,7 +190,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = DA;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Melchor Garau Madrigal";
 				TargetAttributes = {
 					484E732C183BF07300AA0B1C = {
@@ -256,6 +261,7 @@
 				483F73121915A741003C28F2 /* DAImageView.m in Sources */,
 				484E733D183BF07300AA0B1C /* main.m in Sources */,
 				48374F9E183BFFBB003AA802 /* DAMenuIcon.m in Sources */,
+				487FF9881CB94BC700796A60 /* DAStorageDrives.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +323,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -378,6 +385,7 @@
 				GCC_PREFIX_HEADER = "Disk Activity/Disk Activity-Prefix.pch";
 				INFOPLIST_FILE = "Disk Activity/Disk Activity-Info.plist";
 				OTHER_CODE_SIGN_FLAGS = "--deep";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.melchor629.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -392,6 +400,7 @@
 				GCC_PREFIX_HEADER = "Disk Activity/Disk Activity-Prefix.pch";
 				INFOPLIST_FILE = "Disk Activity/Disk Activity-Info.plist";
 				OTHER_CODE_SIGN_FLAGS = "--deep";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.melchor629.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
