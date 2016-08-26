@@ -154,7 +154,6 @@ static void devicePlugged(void* this, io_iterator_t iterator) {
 
         while ((drive = IOIteratorNext(self->drivelist))) {
             /* Obtain the name of the Device (not partition) */
-            const char* str;
             CFStringRef cfstr;
             io_registry_entry_t hdd = 0;
             CFDictionaryRef properties2 = 0;
@@ -164,9 +163,8 @@ static void devicePlugged(void* this, io_iterator_t iterator) {
             IORegistryEntryCreateCFProperties(hdd, (CFMutableDictionaryRef*) &properties2, kCFAllocatorDefault, kNilOptions);
             statistics2 = (CFDictionaryRef) CFDictionaryGetValue(properties2, CFSTR("Device Characteristics"));
             cfstr = (CFStringRef) CFDictionaryGetValue(statistics2, CFSTR("Product Name"));
-            str = CFStringGetCStringPtr(cfstr, CFStringGetSystemEncoding());
 
-            NSString *nsstr = [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
+            NSString *nsstr = (__bridge NSString *) cfstr;
             [validDisks addObject:nsstr];
 
             if(![[disks allKeys] containsObject: nsstr]) {
@@ -239,7 +237,6 @@ static void getDISKcounters(io_iterator_t drivelist, NSObject *this) {
         UInt64          value       = 0;
 
         /* Obtain the name of the Device (not partition) */
-        const char* str;
         CFStringRef cfstr;
         io_registry_entry_t hdd = 0;
         CFDictionaryRef properties2 = 0;
@@ -249,8 +246,7 @@ static void getDISKcounters(io_iterator_t drivelist, NSObject *this) {
         IORegistryEntryCreateCFProperties(hdd, (CFMutableDictionaryRef*) &properties2, kCFAllocatorDefault, kNilOptions);
         statistics2 = (CFDictionaryRef) CFDictionaryGetValue(properties2, CFSTR("Device Characteristics"));
         cfstr = (CFStringRef) CFDictionaryGetValue(statistics2, CFSTR("Product Name"));
-        str = CFStringGetCStringPtr(cfstr, CFStringGetSystemEncoding());
-        NSString* nsstring = [[NSString alloc] initWithUTF8String:str];
+        NSString* nsstring = (__bridge NSString *) cfstr;
 
         IOObjectRelease(hdd); hdd = 0;
         CFRelease(properties2); properties2 = 0;

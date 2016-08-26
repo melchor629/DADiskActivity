@@ -61,7 +61,6 @@
  */
 - (IBAction)updateDiskUsage:(id)sender;
 - (IBAction)quit:(id)sender;
-- (IBAction)preferences:(id)sender;
 - (IBAction)showHideIcon:(id)sender;
 - (IBAction)showHideText:(id)sender;
 - (IBAction)startAtLogin:(id)sender;

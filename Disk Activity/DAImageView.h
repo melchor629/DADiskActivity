@@ -11,7 +11,7 @@
 @interface DAImageView : NSImageView<NSMenuDelegate>
 
 @property NSStatusItem* statusItem;
-@property (atomic) NSMenu* menu;
+@property NSMenu* menu;
 
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;

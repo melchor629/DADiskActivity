@@ -47,6 +47,10 @@ bool isOpened = 0;
     [self.statusItem popUpStatusItemMenu:self.menu];
 }
 
+- (NSMenu*)menu {
+    return menu;
+}
+
 - (void)setMenu:(NSMenu *)_menu {
     menu = _menu;
     [menu setDelegate:self];

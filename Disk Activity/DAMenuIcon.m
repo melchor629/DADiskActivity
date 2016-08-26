@@ -33,7 +33,6 @@ NSString* selectedDevice;
 
     //Add menu items
     NSMenuItem *quit = [[NSMenuItem alloc] initWithTitle:loc(@"Quit") action:@selector(quit:) keyEquivalent:@""];
-    NSMenuItem *preferences = [[NSMenuItem alloc] initWithTitle:loc(@"Preferences") action:@selector(preferences:) keyEquivalent:@""];
     NSMenuItem *icon = [[NSMenuItem alloc] initWithTitle:loc(@"ShowIcon") action:@selector(showHideIcon:) keyEquivalent:@""];
     NSMenuItem *text = [[NSMenuItem alloc] initWithTitle:loc(@"ShowText") action:@selector(showHideText:) keyEquivalent:@""];
     NSMenuItem *sal = [[NSMenuItem alloc] initWithTitle:loc(@"StartAtLogin") action:@selector(startAtLogin:) keyEquivalent:@""];
@@ -41,7 +40,6 @@ NSString* selectedDevice;
 
     [quit setTarget:self];
     [disk setTarget:self];
-    [preferences setTarget:self];
     [icon setTarget:self]; [icon setState:_icon ? NSOnState : NSOffState];
     [text setTarget:self]; [text setState:_text ? NSOnState : NSOffState];
     [sal setTarget:self]; [sal setState:([GBLaunchAtLogin isLoginItem] ? NSOnState : NSOffState)];
@@ -53,7 +51,6 @@ NSString* selectedDevice;
     [menu addItem:icon];
     [menu addItem:text];
     [menu addItem:disk]; [menu setSubmenu:diskM forItem:disk];
-    [menu addItem:preferences];
     [menu addItem:sal];
     [menu addItem:quit];
 
@@ -172,10 +169,6 @@ NSString* selectedDevice;
 
 - (IBAction)quit:(id)sender {
     exit(0);
-}
-
-- (IBAction)preferences:(id)sender {
-
 }
 
 - (IBAction)showHideIcon:(id)sender {
